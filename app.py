@@ -6,7 +6,7 @@ import numpy as np
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, Column, Integer
+from sqlalchemy import create_engine, Column, Integer, inspect
 
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
@@ -24,7 +24,8 @@ db = SQLAlchemy(app)
 # reflect an existing database into a new model
 Base = automap_base()
 
-Base.prepare(db.engine, reflect=True)
+engine = db.engine
+Base.prepare(engine, reflect=True)
 
 # reflect the tables
 # engine = create_engine("sqlite:///db/accident_data_GA.sqlite")
@@ -35,6 +36,7 @@ Base.prepare(db.engine, reflect=True)
 Incidents = Base.classes.ga_accident
 
 
+
 @app.route("/")
 def index():
 
@@ -43,6 +45,8 @@ def index():
 
 @app.route('/get/<city>', methods=['GET', 'POST'])
 def get_accident_by_city(city):
+    session = Session(engine)
+    city_input = city
     print(city_input)
     # if request.method == 'GET':
     # raw_city = request.form['city_input']
@@ -58,12 +62,14 @@ def get_accident_by_city(city):
     minlat = lat-1
     minlong = lng-1
 
-    sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,
-    Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
 
-    result = db.session.query(*sel).filter(Incidents.Start_Lat > minlat, Incidents.Start_Lat < maxlat, 
-        Incidents.Start_Lng > minlong, Incidents.Start_Lng < maxlong).all()
-    print(result.head())
+    # sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,
+    # Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
+    
+    # result = session.query(*sel).filter(Incidents.Start_Lat > minlat, Incidents.Start_Lat < maxlat, 
+    #     Incidents.Start_Lng > minlong, Incidents.Start_Lng < maxlong).all()
+    
+
     # # Create a dictionary entry for each row of metadata information
     # sample_metadata = {}
     # for result in results:
@@ -76,6 +82,7 @@ def get_accident_by_city(city):
     #     sample_metadata["Weather_Condition"] = result[18]
     
     # print(sample_metadata)
+    session.close()
     return render_template("index.html", city_input=city_input)
 
     # elif: request.method == 'POST':
