@@ -1,5 +1,5 @@
 import os
-
+import json
 import pandas as pd
 import numpy as np
 
@@ -62,23 +62,37 @@ def get_accident_by_city(city):
     maxlong = lng+1
     minlat = lat-1
     minlong = lng-1
-    print(maxlong)
 
-    print(session.query(Incidents.Start_Lat > minlat).first())
-
-    inspector = inspect(engine)
-    mytables = inspector.get_table_names()
-    print(mytables)
+    # inspector = inspect(engine)
+    # mytables = inspector.get_table_names()
+    # print(mytables)
 
     sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
     
     result = session.query(*sel).\
     filter(Incidents.Start_Lat > minlat).filter(Incidents.Start_Lat < maxlat).\
-    filter(Incidents.Start_Lng > minlong).filter(Incidents.Start_Lng < maxlong).all()
+    filter(Incidents.Start_Lng > minlong).filter(Incidents.Start_Lng < maxlong).\
+    limit(5).\
+    all()
     
-    print(result)
-    result2 = session.query(Incidents.Start_Lng).filter(Incidents.Start_Lng > maxlong).all()
-    print(result2)
+    features = []
+    for accident in result:
+        point = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [accident[3], accident[4]]
+            }
+        }
+        features.append(point)
+
+    response = {
+        "type": "Feature",
+        "features": features
+    }
+
+    response_JSON = json.dumps(response)
+
     # # Create a dictionary entry for each row of metadata information
     # sample_metadata = {}
     # for result in results:
@@ -92,7 +106,7 @@ def get_accident_by_city(city):
     
     # print(sample_metadata)
     session.close()
-    return render_template("index.html", city_input=city_input)
+    return response_JSON
 
     # elif: request.method == 'POST':
     #     return render_template('database_error.html')
