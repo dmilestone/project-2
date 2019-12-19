@@ -6,7 +6,7 @@ import numpy as np
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, Column, Integer, inspect
+from sqlalchemy import create_engine, Column, Integer, inspect, func
 
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
@@ -46,6 +46,7 @@ def index():
 @app.route('/get/<city>', methods=['GET', 'POST'])
 def get_accident_by_city(city):
     session = Session(engine)
+
     city_input = city
     print(city_input)
     # if request.method == 'GET':
@@ -61,15 +62,23 @@ def get_accident_by_city(city):
     maxlong = lng+1
     minlat = lat-1
     minlong = lng-1
+    print(maxlong)
 
+    print(session.query(Incidents.Start_Lat > minlat).first())
 
-    # sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,
-    # Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
+    inspector = inspect(engine)
+    mytables = inspector.get_table_names()
+    print(mytables)
+
+    sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
     
-    # result = session.query(*sel).filter(Incidents.Start_Lat > minlat, Incidents.Start_Lat < maxlat, 
-    #     Incidents.Start_Lng > minlong, Incidents.Start_Lng < maxlong).all()
+    result = session.query(*sel).\
+    filter(Incidents.Start_Lat > minlat).filter(Incidents.Start_Lat < maxlat).\
+    filter(Incidents.Start_Lng > minlong).filter(Incidents.Start_Lng < maxlong).all()
     
-
+    print(result)
+    result2 = session.query(Incidents.Start_Lng).filter(Incidents.Start_Lng > maxlong).all()
+    print(result2)
     # # Create a dictionary entry for each row of metadata information
     # sample_metadata = {}
     # for result in results:
