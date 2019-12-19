@@ -58,10 +58,10 @@ def get_accident_by_city(city):
     lat = loc_coords['lat']
     lng = loc_coords['long']
 
-    maxlat = lat+1
-    maxlong = lng+1
-    minlat = lat-1
-    minlong = lng-1
+    maxlat = lat+0.5
+    maxlong = lng+0.5
+    minlat = lat-0.5
+    minlong = lng-0.5
 
     # inspector = inspect(engine)
     # mytables = inspector.get_table_names()
@@ -72,7 +72,7 @@ def get_accident_by_city(city):
     result = session.query(*sel).\
     filter(Incidents.Start_Lat > minlat).filter(Incidents.Start_Lat < maxlat).\
     filter(Incidents.Start_Lng > minlong).filter(Incidents.Start_Lng < maxlong).\
-    limit(5).\
+    limit(10).\
     all()
     
     features = []
@@ -111,5 +111,47 @@ def get_accident_by_city(city):
     # elif: request.method == 'POST':
     #     return render_template('database_error.html')
 
+@app.route('/getdate/<date>', methods=['GET', 'POST'])
+def get_accident_by_date(date):
+	session = Session(engine)
+
+	newdate = date.split('-')
+
+	month = newdate[0]
+	day = newdate[1]
+	year = newdate[2]
+	full_date = month+"/"+day+"/"+year
+
+	sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
+
+	results2 = session.query(*sel).\
+    filter(Incidents.StartDate == full_date).\
+    limit(10).\
+    all()
+
+	print(date)
+	print(full_date)
+	print(results2)
+	
+	response_JSON2 = json.dumps(results2)
+
+	session.close()
+	return response_JSON2
+
+# @app.route('/gettime/<time>', methods=['GET', 'POST'])
+# def get_accident_by_time(time):
+# 	session = Session(engine)
+
+# 	sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
+
+# 	results3 = session.query(*sel).\
+# 	filter(or_(Incidents.StartTime.like("17%"),Incidents.StartTime.like("16%")).\
+# 		limit(10).\
+# 		all()
+
+# 	myresponse= json.dumps(results3)
+# 	session.close()
+# 	return myresponse
+
 if __name__ == "__main__":
-    app.run()
+	app.run()
