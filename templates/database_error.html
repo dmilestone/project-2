@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Project 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css"> 
+  <link rel="stylesheet" href="../static/css/style.css">
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+          <div class="navbar-header navbar-right">
+           <a class="navbar-brand" href="index.html">Project 2  </a>
+         </div>
+
+            <!-- <img class="nav-ufo" src="../static/images/storms.png"> -->
+            <form class="navbar-form navbar-left" id="datetime-form">
+              <div class="form-group">
+              <!-- <label for="date">Enter Geo Coordinates for Access to Accident Data</label>
+              <input class="form-control" id="longitude" type="text" placeholder="34.26" value="34.26">
+              <input class="form-control" id="latitude" type="text" placeholder="-87.16" value="-87.16"> -->
+              <label for="date">Enter City in Georgia for Access to Accident Data</label>
+              <input class="form-control" id="city_input" type="text" placeholder="Atlanta" value="Atlanta">
+            </div>
+              <button id="filter-btn" type="click" class="btn btn-default" onclick="onSubmit(event)">Submit
+                </button>
+            </form>
+         
+        </div>
+      </nav>
+      </div>
+
+    <div class="hero text-center">
+      <h1>We're sorry. An error has occured. Please try again. </h1>
+      <!-- <p>Shweta, Rachel, and Danielle</p> -->
+    </div>
+
+
+        <!-- <div class="container">
+          <div class="row margin-top-50">
+             <div class="col-md-12">
+             <div id="map" class="map map-home leaflet-container leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag" style="height: 300px; margin-top: 50px; position: relative;" tabindex="0">
+             </div>
+             </div>
+          </div>
+        </div> -->
+
+  </div>
+
+
+  <footer class="footer">
+    <span class="bottom">Georgia Driving Accident Data Analysis</span>
+  </footer>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
+  <!-- Leaflet JavaScript -->
+  <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+  <script src="../static/js/data.js"></script>
+  <script src="../static/js/app.js"></script>
+  <script src="../static/js/config.js"></script>
+</body>
+
+</html>
