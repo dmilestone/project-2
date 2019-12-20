@@ -45,7 +45,7 @@ def index():
     """Return the homepage."""
     return render_template("index.html")
 
-@app.route('/get/<city>', methods=['GET', 'POST'])
+@app.route('/getbycity/<city>', methods=['GET', 'POST'])
 def get_accident_by_city(city):
     session = Session(engine)
 
@@ -71,49 +71,49 @@ def get_accident_by_city(city):
 
     sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
     
-    result = session.query(*sel).\
+    results = session.query(*sel).\
     filter(Incidents.Start_Lat > minlat).filter(Incidents.Start_Lat < maxlat).\
     filter(Incidents.Start_Lng > minlong).filter(Incidents.Start_Lng < maxlong).\
     limit(10).\
     all()
     
-    features = []
-    for accident in result:
-        point = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [accident[3], accident[4]]
-            }
-        }
-        features.append(point)
+    # features = []
+    # for accident in result:
+    #     point = {
+    #         "type": "Feature",
+    #         "geometry": {
+    #             "type": "Point",
+    #             "coordinates": [accident[3], accident[4]]
+    #         }
+    #     }
+    #     features.append(point)
+    # response = {
+    #     "type": "Feature",
+    #     "features": features
+    # }
+    # response_JSON = json.dumps(response)
+    city_data=[]
+    for result in results:
+    	row={}
+    	row['Severity']=result[0]
+    	row['Lookup Date']=result[1]
+    	row['Time']=result[2]
+    	row['Latitude']=result[3]
+    	row['Longitude']=result[4]
+    	row['Description']=result[5]
+    	row['Weather Condition']=result[6]
+    	city_data.append(row)
 
-    response = {
-        "type": "Feature",
-        "features": features
-    }
-
-    response_JSON = json.dumps(response)
-
-    # # Create a dictionary entry for each row of metadata information
-    # sample_metadata = {}
-    # for result in results:
-    #     sample_metadata["Severity"] = result[3]
-    #     sample_metadata["StartDate"] = result[4]
-    #     sample_metadata["StartTime"] = result[5]
-    #     sample_metadata["Start_Lat"] = result[8]
-    #     sample_metadata["Start_Lng"] = result[9]
-    #     sample_metadata["Description"] = result[10]
-    #     sample_metadata["Weather_Condition"] = result[18]
-    
-    # print(sample_metadata)
     session.close()
-    return response_JSON
+    return jsonify(city_data)
 
-    # elif: request.method == 'POST':
-    #     return render_template('database_error.html')
+    # print(sample_metadata)
+    # session.close()
+    # return response_JSON
 
-@app.route('/getdate/<date>', methods=['GET', 'POST'])
+
+
+@app.route('/getbydate/<date>', methods=['GET', 'POST'])
 def get_accident_by_date(date):
 	session = Session(engine)
 
@@ -134,11 +134,28 @@ def get_accident_by_date(date):
 	print(date)
 	print(full_date)
 	print(results2)
-	
-	response_JSON2 = json.dumps(results2)
 
+	date_data=[]
+	for result in results2:
+		row={}
+		row['Severity']=result[0]
+		row['Lookup Date']=result[1]
+		row['Time']=result[2]
+		row['Latitude']=result[3]
+		row['Longitude']=result[4]
+		row['Description']=result[5]
+		row['Weather Condition']=result[6]
+		date_data.append(row)
 	session.close()
-	return response_JSON2
+	return jsonify(date_data)
+	
+	# results20 = session.query(func.avg(Incidents.Severity), func.count(Incidents.Weather_Condition), func.avg(Incidents.StartTime)).\
+	# filter(Incidents.StartDate == full_date).\
+	# all()
+
+	# response_JSON2 = json.dumps(results2)
+	# session.close()
+	# return response_JSON2
 
 # @app.route('/gettime/<time>', methods=['GET', 'POST'])
 # def get_accident_by_time(time):
