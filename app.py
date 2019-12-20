@@ -2,6 +2,7 @@ import os
 import json
 import pandas as pd
 import numpy as np
+from flask_cors import CORS
 
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
@@ -15,6 +16,8 @@ import convert_input
 
 # init app
 app = Flask(__name__)
+
+CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/accident_data_GA.sqlite"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -34,7 +37,6 @@ Base.prepare(engine, reflect=True)
 # Samples_Metadata = Base.classes.sample_metadata
 # Samples = Base.classes.samples
 Incidents = Base.classes.ga_accident
-
 
 
 @app.route("/")
