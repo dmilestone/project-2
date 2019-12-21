@@ -47,6 +47,7 @@ def index():
 
 @app.route('/getbycity/<city>', methods=['GET', 'POST'])
 def get_accident_by_city(city):
+    print(city)
     session = Session(engine)
 
     city_input = city
@@ -95,17 +96,22 @@ def get_accident_by_city(city):
     city_data=[]
     for result in results:
     	row={}
-    	row['Severity']=result[0]
-    	row['Lookup Date']=result[1]
-    	row['Time']=result[2]
-    	row['Latitude']=result[3]
-    	row['Longitude']=result[4]
-    	row['Description']=result[5]
-    	row['Weather Condition']=result[6]
+    	# row['Severity']=result[0]
+    	# row['Lookup Date']=result[1]
+    	# row['Time']=result[2]
+    	row['location']= [result[3], result[4]]
+    	# row['Longitude']=result[4]
+    	row['name']=result[5]
+    	# row['Weather Condition']=result[6]
     	city_data.append(row)
 
+    response = {
+        "accidents": city_data,
+        "mapCenter": [lat, lng]
+    }
+
     session.close()
-    return jsonify(city_data)
+    return json.dumps(response)
 
     # print(sample_metadata)
     # session.close()
