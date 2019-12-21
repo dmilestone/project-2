@@ -45,8 +45,8 @@ def index():
     """Return the homepage."""
     return render_template("index.html")
 
-@app.route('/getbycity/<city>', methods=['GET', 'POST'])
-def get_accident_by_city(city):
+@app.route('/getbycity/<city>/<year>', methods=['GET', 'POST'])
+def get_accident_by_city(city, year):
     print(city)
     session = Session(engine)
 
@@ -75,7 +75,7 @@ def get_accident_by_city(city):
     results = session.query(*sel).\
     filter(Incidents.Start_Lat > minlat).filter(Incidents.Start_Lat < maxlat).\
     filter(Incidents.Start_Lng > minlong).filter(Incidents.Start_Lng < maxlong).\
-    limit(10).\
+    filter(Incidents.StartTime.like("%2018")).\
     all()
     
     # features = []
@@ -134,7 +134,6 @@ def get_accident_by_date(date):
 
 	results2 = session.query(*sel).\
     filter(Incidents.StartDate == full_date).\
-    limit(10).\
     all()
 
 	print(date)
