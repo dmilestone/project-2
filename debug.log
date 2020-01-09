@@ -171,3 +171,17 @@
 [1220/195118.328:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
 [1220/195118.328:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
 [1220/195118.329:ERROR:exception_snapshot_win.cc(98)] thread ID 6508 not found in process
+[0108/155819.641:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[0108/155819.675:ERROR:exception_snapshot_win.cc(98)] thread ID 6956 not found in process
+[0108/173730.450:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[0108/173730.454:ERROR:exception_snapshot_win.cc(98)] thread ID 14056 not found in process
+[0108/174231.574:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[0108/174231.580:ERROR:exception_snapshot_win.cc(98)] thread ID 11320 not found in process
+[0108/180116.467:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0108/180116.470:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[0108/180116.474:ERROR:exception_snapshot_win.cc(98)] thread ID 18884 not found in process
+[0108/180116.474:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0108/180116.474:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0108/180116.474:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0108/180116.474:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[0108/180116.475:ERROR:exception_snapshot_win.cc(98)] thread ID 6460 not found in process

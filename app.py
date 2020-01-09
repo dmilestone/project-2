@@ -42,80 +42,80 @@ Incidents = Base.classes.ga_accident
 @app.route("/")
 def index():
 
-    """Return the homepage."""
-    return render_template("index.html")
+	"""Return the homepage."""
+	return render_template("index.html")
 
-@app.route('/getbycity/<city>/<year>', methods=['GET', 'POST'])
-def get_accident_by_city(city, year):
-    print(city)
-    session = Session(engine)
+@app.route('/getbycity/<city>', methods=['GET', 'POST'])
+def get_accident_by_city(city):
+	print(city)
+	session = Session(engine)
 
-    city_input = city
-    print(city_input)
-    # if request.method == 'GET':
-    # raw_city = request.form['city_input']
-    target_city = city_input + ', GA'
-    
-    loc_coords = convert_input.scrape(target_city)
-    print(loc_coords)
-    lat = loc_coords['lat']
-    lng = loc_coords['long']
+	city_input = city
+	print(city_input)
+	# if request.method == 'GET':
+	# raw_city = request.form['city_input']
+	target_city = city_input + ', GA'
+	
+	loc_coords = convert_input.scrape(target_city)
+	print(loc_coords)
+	lat = loc_coords['lat']
+	lng = loc_coords['long']
 
-    maxlat = lat+0.5
-    maxlong = lng+0.5
-    minlat = lat-0.5
-    minlong = lng-0.5
+	maxlat = lat+0.5
+	maxlong = lng+0.5
+	minlat = lat-0.5
+	minlong = lng-0.5
 
-    # inspector = inspect(engine)
-    # mytables = inspector.get_table_names()
-    # print(mytables)
+	# inspector = inspect(engine)
+	# mytables = inspector.get_table_names()
+	# print(mytables)
 
-    sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
-    
-    results = session.query(*sel).\
-    filter(Incidents.Start_Lat > minlat).filter(Incidents.Start_Lat < maxlat).\
-    filter(Incidents.Start_Lng > minlong).filter(Incidents.Start_Lng < maxlong).\
-    filter(Incidents.StartTime.like("%2018")).\
-    all()
-    
-    # features = []
-    # for accident in result:
-    #     point = {
-    #         "type": "Feature",
-    #         "geometry": {
-    #             "type": "Point",
-    #             "coordinates": [accident[3], accident[4]]
-    #         }
-    #     }
-    #     features.append(point)
-    # response = {
-    #     "type": "Feature",
-    #     "features": features
-    # }
-    # response_JSON = json.dumps(response)
-    city_data=[]
-    for result in results:
-    	row={}
-    	# row['Severity']=result[0]
-    	# row['Lookup Date']=result[1]
-    	# row['Time']=result[2]
-    	row['location']= [result[3], result[4]]
-    	# row['Longitude']=result[4]
-    	row['name']=result[5]
-    	# row['Weather Condition']=result[6]
-    	city_data.append(row)
+	sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
+	
+	results = session.query(*sel).\
+	filter(Incidents.Start_Lat > minlat).filter(Incidents.Start_Lat < maxlat).\
+	filter(Incidents.Start_Lng > minlong).filter(Incidents.Start_Lng < maxlong).\
+	limit(20)
+	
+	# features = []
+	# for accident in result:
+	#     point = {
+	#         "type": "Feature",
+	#         "geometry": {
+	#             "type": "Point",
+	#             "coordinates": [accident[3], accident[4]]
+	#         }
+	#     }
+	#     features.append(point)
+	# response = {
+	#     "type": "Feature",
+	#     "features": features
+	# }
+	# response_JSON = json.dumps(response)
 
-    response = {
-        "accidents": city_data,
-        "mapCenter": [lat, lng]
-    }
+	city_data=[]
+	for result in results:
+		row={}
+		row['Severity']=result[0]
+		row['Lookup Date']=result[1]
+		row['Time']=result[2]
+		row['Latitude']=result[3]
+		row['Longitude']=result[4]
+		row['Description']=result[5]
+		row['Weather Condition']=result[6]
+		city_data.append(row)
 
-    session.close()
-    return json.dumps(response)
+	response={
+		"accidents": city_data,
+		"mapCenter": [lat, lng]
+	}
 
-    # print(sample_metadata)
-    # session.close()
-    # return response_JSON
+	session.close()
+	return json.dumps(response)
+
+	# print(sample_metadata)
+	# session.close()
+	# return response_JSON
 
 
 
@@ -125,16 +125,16 @@ def get_accident_by_date(date):
 
 	newdate = date.split('-')
 
-	month = newdate[0]
-	day = newdate[1]
-	year = newdate[2]
+	year = newdate[0]
+	month = newdate[1]
+	day = newdate[2]
 	full_date = month+"/"+day+"/"+year
 
 	sel = [Incidents.Severity,Incidents.StartDate,Incidents.StartTime,Incidents.Start_Lat,Incidents.Start_Lng,Incidents.Description,Incidents.Weather_Condition]
 
 	results2 = session.query(*sel).\
-    filter(Incidents.StartDate == full_date).\
-    all()
+	filter(Incidents.StartDate == full_date).\
+	all()
 
 	print(date)
 	print(full_date)
@@ -151,8 +151,14 @@ def get_accident_by_date(date):
 		row['Description']=result[5]
 		row['Weather Condition']=result[6]
 		date_data.append(row)
+	
+	response= {
+		"accidents": date_data,
+	}
+
 	session.close()
-	return jsonify(date_data)
+	return json.dumps(response)
+
 	
 	# results20 = session.query(func.avg(Incidents.Severity), func.count(Incidents.Weather_Condition), func.avg(Incidents.StartTime)).\
 	# filter(Incidents.StartDate == full_date).\
