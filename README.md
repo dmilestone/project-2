@@ -1,6 +1,6 @@
 # project-2
 
-# The goal of this project was to tell a story through interactive means and data visualizations. 
+The goal of this project was to tell a story through interactive means and data visualizations. 
 
 # Visualizations must include:
 -Python Flask- powered RESTful API
